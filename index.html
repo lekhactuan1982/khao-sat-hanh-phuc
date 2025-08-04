@@ -68,31 +68,26 @@
 
   <script>
     const questions = [
-      // Cảm xúc
       "Tuần rồi bạn có cười toe toét mà chẳng vì lý do gì không?",
       "Bạn có hay tự cười như bị điên khi lướt mạng xã hội không?",
       "Lúc bị sếp/nửa kia/cơn đói hành hạ, bạn mất bao lâu để tỉnh lại như chưa hề có cuộc chia ly?",
       "Bạn có hay thấy đời đẹp vì bỗng dưng… trời xanh và có trà đá?",
       "Bạn có thấy tâm hồn mình giống con mèo – muốn sao thì làm vậy không?",
-      // Quan hệ
       "Bạn có đứa bạn thân nào biết hết chuyện xấu của bạn mà vẫn chưa block bạn không?",
       "Gia đình bạn có hay gọi điện chỉ để hỏi mỗi câu: 'Ăn chưa?' không?",
       "Bạn có từng tụ tập tám chuyện mà quên luôn cả ăn chưa?",
       "Bạn có cảm giác mình là thành viên không thể thiếu trong hội 'tám chuyện vỉa hè'?",
       "Bạn có hay giúp người khác chỉ vì… vui thôi, không cần lý do?",
-      // Sức khỏe
       "Sáng dậy bạn thấy mình như siêu nhân hay xác sống?",
       "Bạn có ngủ đủ 7 tiếng hay ngủ lúc nào dậy lúc đó theo cảm hứng?",
       "Bạn có di chuyển bằng chân ngoài việc đi ra tủ lạnh không?",
       "Bạn thấy cơ thể mình giống xe điện sắp hết pin hay sạc đầy mỗi sáng?",
       "Bạn có đang cắt giảm trà sữa, bánh tráng, game, hay ít nhất là suy nghĩ về điều đó không?",
-      // Ý nghĩa sống
       "Bạn thức dậy vì đam mê, vì đồng hồ báo thức, hay vì bụng đói?",
       "Bạn có thấy việc bạn đang làm khiến bạn bớt thấy mình vô hình không?",
       "Bạn có cảm giác mình đang đi đúng đường hay chỉ là đi hoài chưa thấy quán bún bò?",
       "Khi nhìn lại quá khứ, bạn thấy mình khôn ra, lì hơn hay vẫn 'ngơ' như cũ?",
       "Bạn có đang làm thứ gì đó khiến bạn muốn hét lên: 'Đây là tôi!' không?",
-      // Môi trường sống
       "Nhà bạn có đủ yên tĩnh để nghe được tiếng thở dài của mình không?",
       "Bạn có ăn uống đủ đầy, hay mỗi bữa là một lần đối đầu với tủ lạnh trống trơn?",
       "Mỗi lần mở ví, bạn có cảm giác đang chơi trò chơi 'đoán xem còn nhiêu'?",
@@ -100,20 +95,59 @@
       "Bạn có dễ dàng gọi được ship đồ ăn, hay phải đi săn như thời nguyên thủy?"
     ];
 
-    const options = [
-      "0 - Chưa bao giờ như vậy, xin lỗi cuộc đời!",
-      "1 - Hiếm hoi lắm mới xảy ra",
-      "2 - Lâu lâu có chớp nhoáng",
-      "3 - Khá thường xuyên nha!",
-      "4 - Trời ơi chuyện nhỏ, chuyện ngày nào cũng có!"
+    const optionsList = [
+      // Tuỳ chỉnh theo từng câu hỏi (mảng các mảng)
+      [
+        "0 - Mặt đơ như tượng, không cảm xúc",
+        "1 - Cười gượng 1–2 lần cho có lệ",
+        "2 - Cười vài lần nhưng chưa thấy đã",
+        "3 - Cười mỗi ngày, có khi tự khen mình vui",
+        "4 - Cười như lên đồng, cả nhà tưởng trúng số"
+      ],
+      [
+        "0 - Mạng xã hội làm tôi buồn thêm",
+        "1 - Thỉnh thoảng thấy meme hay cũng nhếch mép",
+        "2 - Cười nhẹ, nhưng phải có động lực",
+        "3 - Hay cười một mình khi thấy clip mèo té",
+        "4 - Cười suốt, ai nghĩ tôi bị khùng cũng chịu"
+      ],
+      [
+        "0 - Cả tuần vẫn còn ấm ức",
+        "1 - Vài ngày mới nguôi ngoai",
+        "2 - Một buổi chiều là phục hồi tinh thần",
+        "3 - Vài tiếng là ổn",
+        "4 - 5 phút sau là hết buồn, đi ăn luôn"
+      ],
+      [
+        "0 - Chẳng thấy gì đáng yêu trên đời",
+        "1 - Đôi khi có chút rung cảm nhẹ",
+        "2 - Thỉnh thoảng thấy cuộc sống cũng đáng sống",
+        "3 - Dễ vui với những điều nhỏ nhặt",
+        "4 - Hạnh phúc chỉ vì trời xanh và ly trà đá!"
+      ],
+      [
+        "0 - Bị kiểm soát bởi mọi thứ xung quanh",
+        "1 - Cố gắng sống theo khuôn mẫu",
+        "2 - Tự do đôi chút, nhưng vẫn ngại ngần",
+        "3 - Làm điều mình thích trong hầu hết tình huống",
+        "4 - Đích thực là mèo – sống theo kiểu của mình"
+      ],
+      // Những câu còn lại vẫn dùng scale 0–4 tiêu chuẩn cho đơn giản
     ];
 
     const questionsDiv = document.getElementById("questions");
     questions.forEach((q, i) => {
       const div = document.createElement("div");
       div.className = "question";
+      const opts = optionsList[i] || [
+        "0 - Không bao giờ",
+        "1 - Hiếm khi",
+        "2 - Thỉnh thoảng",
+        "3 - Thường xuyên",
+        "4 - Gần như luôn luôn"
+      ];
       div.innerHTML = `<div class='question-title'>${i+1}. ${q}</div>` +
-        options.map((opt, idx) => `
+        opts.map((opt, idx) => `
           <label>
             <input type='radio' name='q${i}' value='${idx}' required> ${opt}
           </label><br>`).join("");
