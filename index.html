@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Khảo sát Hạnh Phúc Vui Nhộn</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f0f8ff;
+      color: #333;
+    }
+    h1 {
+      color: #0066cc;
+    }
+    .question {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .question-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      background-color: #e6f7ff;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #218838;
+    }
+    input[type="text"], input[type="number"] {
+      padding: 8px;
+      margin-bottom: 15px;
+      width: 300px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 Khảo sát mức độ hạnh phúc (phiên bản vui nhộn)</h1>
+  <form id="quiz-form">
+    <label>Họ và tên:</label>
+    <input type="text" name="name" required>
+
+    <label>Độ tuổi:</label>
+    <input type="number" name="age" min="1" required>
+  </form>
+  <div id="questions"></div>
+  <button onclick="submitQuiz()">Xem kết quả</button>
+  <div class="result" id="result" style="display:none"></div>
+
+  <script>
+    const questions = [
+      // Cảm xúc
+      "Tuần rồi bạn có cười toe toét mà chẳng vì lý do gì không?",
+      "Bạn có hay tự cười như bị điên khi lướt mạng xã hội không?",
+      "Lúc bị sếp/nửa kia/cơn đói hành hạ, bạn mất bao lâu để tỉnh lại như chưa hề có cuộc chia ly?",
+      "Bạn có hay thấy đời đẹp vì bỗng dưng… trời xanh và có trà đá?",
+      "Bạn có thấy tâm hồn mình giống con mèo – muốn sao thì làm vậy không?",
+      // Quan hệ
+      "Bạn có đứa bạn thân nào biết hết chuyện xấu của bạn mà vẫn chưa block bạn không?",
+      "Gia đình bạn có hay gọi điện chỉ để hỏi mỗi câu: 'Ăn chưa?' không?",
+      "Bạn có từng tụ tập tám chuyện mà quên luôn cả ăn chưa?",
+      "Bạn có cảm giác mình là thành viên không thể thiếu trong hội 'tám chuyện vỉa hè'?",
+      "Bạn có hay giúp người khác chỉ vì… vui thôi, không cần lý do?",
+      // Sức khỏe
+      "Sáng dậy bạn thấy mình như siêu nhân hay xác sống?",
+      "Bạn có ngủ đủ 7 tiếng hay ngủ lúc nào dậy lúc đó theo cảm hứng?",
+      "Bạn có di chuyển bằng chân ngoài việc đi ra tủ lạnh không?",
+      "Bạn thấy cơ thể mình giống xe điện sắp hết pin hay sạc đầy mỗi sáng?",
+      "Bạn có đang cắt giảm trà sữa, bánh tráng, game, hay ít nhất là suy nghĩ về điều đó không?",
+      // Ý nghĩa sống
+      "Bạn thức dậy vì đam mê, vì đồng hồ báo thức, hay vì bụng đói?",
+      "Bạn có thấy việc bạn đang làm khiến bạn bớt thấy mình vô hình không?",
+      "Bạn có cảm giác mình đang đi đúng đường hay chỉ là đi hoài chưa thấy quán bún bò?",
+      "Khi nhìn lại quá khứ, bạn thấy mình khôn ra, lì hơn hay vẫn 'ngơ' như cũ?",
+      "Bạn có đang làm thứ gì đó khiến bạn muốn hét lên: 'Đây là tôi!' không?",
+      // Môi trường sống
+      "Nhà bạn có đủ yên tĩnh để nghe được tiếng thở dài của mình không?",
+      "Bạn có ăn uống đủ đầy, hay mỗi bữa là một lần đối đầu với tủ lạnh trống trơn?",
+      "Mỗi lần mở ví, bạn có cảm giác đang chơi trò chơi 'đoán xem còn nhiêu'?",
+      "Bạn có chỗ nào riêng để nằm ườn và suy nghĩ về cuộc đời không?",
+      "Bạn có dễ dàng gọi được ship đồ ăn, hay phải đi săn như thời nguyên thủy?"
+    ];
+
+    const options = [
+      "0 - Chưa bao giờ như vậy, xin lỗi cuộc đời!",
+      "1 - Hiếm hoi lắm mới xảy ra",
+      "2 - Lâu lâu có chớp nhoáng",
+      "3 - Khá thường xuyên nha!",
+      "4 - Trời ơi chuyện nhỏ, chuyện ngày nào cũng có!"
+    ];
+
+    const questionsDiv = document.getElementById("questions");
+    questions.forEach((q, i) => {
+      const div = document.createElement("div");
+      div.className = "question";
+      div.innerHTML = `<div class='question-title'>${i+1}. ${q}</div>` +
+        options.map((opt, idx) => `
+          <label>
+            <input type='radio' name='q${i}' value='${idx}' required> ${opt}
+          </label><br>`).join("");
+      questionsDiv.appendChild(div);
+    });
+
+    function submitQuiz() {
+      const data = new FormData(document.getElementById("quiz-form"));
+      let name = data.get("name");
+      let age = data.get("age");
+      let score = 0;
+
+      for (let i = 0; i < questions.length; i++) {
+        let value = document.querySelector(`input[name='q${i}']:checked`);
+        if (!value) {
+          alert("Bạn chưa trả lời đầy đủ các câu hỏi!");
+          return;
+        }
+        score += parseInt(value.value);
+      }
+
+      let message = "";
+      if (score >= 80) message = "🌟 Bạn đang rất hạnh phúc! Hãy giữ gìn nguồn năng lượng tích cực này.";
+      else if (score >= 60) message = "😊 Bạn đang khá ổn, nhưng vẫn có thể cải thiện một vài khía cạnh trong cuộc sống.";
+      else if (score >= 40) message = "😐 Hạnh phúc của bạn đang hơi mong manh, hãy dành thời gian chăm sóc bản thân và kết nối nhiều hơn.";
+      else message = "😟 Bạn đang gặp nhiều khó khăn. Đừng ngại tìm sự hỗ trợ từ bạn bè, gia đình hoặc chuyên gia.";
+
+      document.getElementById("result").style.display = "block";
+      document.getElementById("result").innerHTML = `<h2>Kết quả của ${name} (${age} tuổi): ${score}/100 điểm</h2><p>${message}</p>`;
+    }
+  </script>
+</body>
+</html>
